@@ -1,6 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -12,6 +13,14 @@
         <li class="nav-item">
           <RouterLink class="nav-link" id="apropos" :to="{ name: 'About' }">À propos</RouterLink>
         </li>
+
+        <li class="nav-item">
+          <RouterLink class="nav-link" id="accueil" to="/">Accueil</RouterLink>
+        </li>
+        <li class="nav-item">
+          <RouterLink class="nav-link" id="score" :to="{ name: 'Score' }">Score</RouterLink>
+        </li>
+
       </ul>
     </div>
   </nav>
