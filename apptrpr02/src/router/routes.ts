@@ -1,20 +1,38 @@
 import type { RouteRecordRaw } from 'vue-router'
-import PostsView from '../views/PostsView.vue'
+//import PostsView from '../views/PostsView.vue'
+import HomeView from '../views/HomeView.vue'
+import MissionView from '../views/MissionView.vue'
+import ScoreView from '../views/ScoreView.vue'
 
 const routes: Array<RouteRecordRaw> = [
+    //{
+    //  // Route par défaut
+    //  // La route / est associé au composant PostsView. C'est ce composant qui est chargé quand l'utilisateur navigue vers la page principale de l'application.
+    //  path: '/',
+    //  name: 'Posts',
+    //  component: PostsView
+    //},
+    //{
+    //  // Route de page "à propos"
+    //  // Un import dynamique permet de charger un composant uniquement quand il est nécessaire. Si l'utilisateur n'a pas besoin de la page About, alors le composant AboutView ne sera pas chargé. Cela permet d'optimiser le temps de chargement de l'application.
+    //  path: '/about',
+    //  name: 'About',
+    //  component: () => import('../views/AboutView.vue')
+    //},
     {
-      // Route par défaut
-      // La route / est associé au composant PostsView. C'est ce composant qui est chargé quand l'utilisateur navigue vers la page principale de l'application.
       path: '/',
-      name: 'Posts',
-      component: PostsView
+      name: 'accueil',
+      component: HomeView
     },
     {
-      // Route de page "à propos"
-      // Un import dynamique permet de charger un composant uniquement quand il est nécessaire. Si l'utilisateur n'a pas besoin de la page About, alors le composant AboutView ne sera pas chargé. Cela permet d'optimiser le temps de chargement de l'application.
-      path: '/about',
-      name: 'About',
-      component: () => import('../views/AboutView.vue')
+      path: '/mission',
+      name: 'Mission',
+      component: MissionView
+    },
+    {
+      path: '/score',
+      name: 'Score',
+      component: ScoreView
     },
     {
       // Route qui affiche le détail d'un post identifié par son id.
