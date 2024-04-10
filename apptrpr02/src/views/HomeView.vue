@@ -3,7 +3,9 @@
 
 <template>
   <div>
-    <h2>Votre Objectif : survivre à 5 missions en obtenant le plus de crédits galactiques</h2>
+    <div class="text-center" id="title">
+      <h2>Votre Objectif : survivre à 5 missions en obtenant le plus de crédits galactiques</h2>
+    </div>
 
     <div id="container">
       <div id="page">
@@ -22,8 +24,8 @@
             </select>
           </div>
 
-          <div>
-            <button type="submit" class="btn btn-primary">Débuter la partie</button>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary ">Débuter la partie</button>
           </div>
 
         </form>

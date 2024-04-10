@@ -12,4 +12,14 @@
     margin: 50px;
     padding: 50px;
     background-color: lightskyblue;
+    border-radius: 30px;
+}
+
+#title {
+    background-color: lightskyblue;
+    padding: 15px;
+}
+
+.theme-color {
+    background-color: lightskyblue;
 }
