@@ -14,19 +14,16 @@ const isLoading = ref(false)
 onMounted(async () => {
   isLoading.value = true
 
-  try 
-  {
+  try {
     posts.value = await postsService.getPosts()
-  } 
-  catch (error) 
-  {
+  }
+  catch (error) {
     useToast().error(
       `Erreur avec le service: ${(error as Error).message}. Est-ce que vous avez démarré le backend localement ?`,
       { duration: 6000 }
     )
-  } 
-  finally 
-  {
+  }
+  finally {
     isLoading.value = false
   }
 })
@@ -41,14 +38,12 @@ onMounted(async () => {
       <li v-for="post in posts" v-bind:key="post.id">
         {{ post.title }}
         <!-- voir le fichier navigationBar.vue pour les explications sur RouterLink -->
-        <RouterLink
-          :to="{
-            name: 'PostDetail',
-            // On peut passer des props à la route. Ici, on passe l'id du post à éditer pour que le composant PostDetailView puisse récupérer la publication et l'afficher.
-            // Attention, l'autorisation de passer des paramètres à un composant doit être activé dans la déclaration de la route (voir la route PostDetailView dans le fichier routes.js).
-            params: { id: post.id }
-          }"
-        >
+        <RouterLink :to="{
+        name: 'PostDetail',
+        // On peut passer des props à la route. Ici, on passe l'id du post à éditer pour que le composant PostDetailView puisse récupérer la publication et l'afficher.
+        // Attention, l'autorisation de passer des paramètres à un composant doit être activé dans la déclaration de la route (voir la route PostDetailView dans le fichier routes.js).
+        params: { id: post.id }
+      }">
           <span>Éditer</span>
         </RouterLink>
       </li>
@@ -57,3 +52,4 @@ onMounted(async () => {
     <Loading :active="isLoading" />
   </div>
 </template>
+../scripts/services/postsService

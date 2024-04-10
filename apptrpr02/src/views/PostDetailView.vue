@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
-import { useRouter, onBeforeRouteLeave  } from 'vue-router'
+import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { postsService } from '../services/postsService'
 import ConfirmModal from '../components/ConfirmModal.vue'
 import Loading from 'vue-loading-overlay'
@@ -83,50 +83,24 @@ onBeforeRouteLeave((to, from, next) => {
     <form class="row g-3" @submit.prevent="savePost">
       <label for="title-input">Titre </label>
       <!-- la validation de ce formulaire est géré par le navigateur avec l'attribut required et le type de l'input. -->
-      <input
-        type="text"
-        id="title-input"
-        class="form-control"
-        v-model="post.title"
-        required
-      />
+      <input type="text" id="title-input" class="form-control" v-model="post.title" required />
 
       <label for="content-textarea">Contenu </label>
-      <textarea
-        type="text"
-        id="content-textarea"
-        class="form-control"
-        v-model="post.content"
-        required
-      />
+      <textarea type="text" id="content-textarea" class="form-control" v-model="post.content" required />
 
       <label for="author-input">Auteur </label>
-      <input
-        type="text"
-        id="author-input"
-        class="form-control"
-        v-model="post.author"
-        required
-      />
+      <input type="text" id="author-input" class="form-control" v-model="post.author" required />
 
       <div>
         <!--  type="submit" : Le type submit permet de définir le bouton qui va soumettre le formulaire. Sur le clic du bouton, l'événement submit est émis et il est intercepté par le @submit.prevent dans la balise form. Noter aussi le lien de l'attribut disabled avec la valeur de la propriété calculée postHasBeenModified. Si le post n'a pas été modifié, le bouton est désactivé. -->
-        <button
-          type="submit"
-          class="btn btn-primary m-1"
-          :disabled="!postHasBeenModified"
-        >
+        <button type="submit" class="btn btn-primary m-1" :disabled="!postHasBeenModified">
           Sauvegarder
         </button>
 
         <!-- @click.prevent : Même principe que pour le @submit.prevent ci-dessus. On veut empêcher le comportement par défaut du navigateur qui est de recharger la page. -->
 
         <!-- type="button" : Le type button permet de définir manuellement le comportement du bouton (par defaut, un bouton est de type est submit). Donc, ici en ajoutant type="button", on indique que le bouton ne doit pas soumettre le formulaire. C'est Vue.js qui gère le comportement du bouton en appelant la méthode cancelPost. On aurait aussi pu utiliser @click.prevent à la place. -->
-        <button
-          type="button"
-          class="btn btn-secondary m-1 ml-2"
-          @click="cancelPost"
-        >
+        <button type="button" class="btn btn-secondary m-1 ml-2" @click="cancelPost">
           Quitter
         </button>
       </div>
@@ -134,16 +108,11 @@ onBeforeRouteLeave((to, from, next) => {
   </div>
   <div>
     <!-- Voir le composant ConfirmModal. -->
-    <ConfirmModal
-      @onModalConfirmed="cancelConfirmed"
-      :trigger="triggerModal"
-      title="Attention"
-      body="Vos changements seront perdus. Voulez-vous vraiment quitter cette page ? "
-      cancelButton="Non"
-      confirmButton="Oui, quitter sans sauvergarder"
-    />
+    <ConfirmModal @onModalConfirmed="cancelConfirmed" :trigger="triggerModal" title="Attention"
+      body="Vos changements seront perdus. Voulez-vous vraiment quitter cette page ? " cancelButton="Non"
+      confirmButton="Oui, quitter sans sauvergarder" />
     <Loading :active="isLoading" />
   </div>
 </template>
 
-<style scoped></style>
+<style scoped></style>../scripts/services/postsService
