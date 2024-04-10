@@ -1,0 +1,15 @@
+#container {
+    display: flex;
+
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+}
+
+#page {
+    flex: 1;
+    margin: 50px;
+    padding: 50px;
+    background-color: lightskyblue;
+}
