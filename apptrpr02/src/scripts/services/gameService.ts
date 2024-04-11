@@ -1,17 +1,17 @@
 export type Ship = {
     id: number,
-    shipName: string,
+    name: string,
 }
 
 export type Score = {
     id: number,
-    playerName: string,
+    name: string,
     score: number,
 }
 
 export type Character = {
     id: number,
-    characterName: string,
+    name: string,
     credit: number,
     experience: number,
     ship: {

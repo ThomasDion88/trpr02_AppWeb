@@ -8,13 +8,13 @@ import type Post from '../post'
 
 const API_URL = 'http://127.0.0.1:3000'
 
-async function getPosts() {
-  const { data } = await axios.get(`${API_URL}/posts`)
-  return data
+async function postPlayerData(playerData: { playerName: string, selectedShipId: string }) {
+  const response = await axios.post(`${API_URL}/mission`, playerData);
+  return response.data.id;
 }
 
-async function getPost(id: string) {
-  const { data } = await axios.get(`${API_URL}/posts/${id}`)
+async function getPosts() {
+  const { data } = await axios.get(`${API_URL}/posts`)
   return data
 }
 
@@ -24,6 +24,6 @@ async function updatePost(post: Post) {
 
 export const postsService = {
   getPosts,
-  getPost,
-  updatePost
+  updatePost,
+  postPlayerData
 }
