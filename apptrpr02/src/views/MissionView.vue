@@ -1,21 +1,59 @@
-<!-- Ce composant est associé à la route "/about" (voir fichier src/router/index.ts). -->
 <template>
-  <div>
-    <h1>À propos - Lorem Ipsum</h1>
-    <p>
-      Praesent vel nunc diam. Quisque tellus felis, venenatis tincidunt
-      scelerisque sed, congue et sem. Maecenas scelerisque felis ut ante
-      maximus, nec imperdiet quam porttitor. Integer aliquet urna purus, id
-      faucibus leo efficitur ac. Maecenas porta dictum arcu, eget tempus est
-      aliquam eu. Donec feugiat ligula vel neque ultricies, eget iaculis lorem
-      tempor. Curabitur posuere lobortis auctor.
-    </p>
-    <p>
-      Nulla et dolor at lacus aliquet feugiat. Pellentesque egestas libero nunc,
-      eu fermentum turpis imperdiet vel. Morbi sodales justo ex, ac ultrices
-      elit semper vel. Maecenas gravida orci a diam rhoncus luctus. Donec
-      sagittis posuere lorem in feugiat. Cras tempor libero non eros ultricies
-      semper. Sed maximus lacus at eros congue, sit amet aliquam diam elementum.
-    </p>
+  <div class="page-container">
+
+    <div id="mission-board">
+
+      <div class="mission-data">
+
+        <div class="container-theme row">
+          <div class="theme-color">
+            <h4>Actions</h4>
+          </div>
+          <div id="actions">
+            <button class="btn btn-primary ">Combattre</button>
+            <button class="btn btn-primary ">Terminer la mission</button>
+            <button class="btn btn-primary ">Terminer la mission et réparer le vaisseau</button>
+          </div>
+
+        </div>
+
+        <div class="container-theme">
+          <div class="theme-color">
+            <h4>Mission en cours</h4>
+          </div>
+        </div>
+
+      </div>
+
+
+
+      <div class="mission-data">
+
+        <div class="container-theme row">
+          <div class="theme-color">
+            <h4>Nom du Player ici</h4>
+          </div>
+          <p>Rank joueur ici</p>
+          <div>Vaisseau de joueur ici</div>
+          <div class="w3-light-grey">
+            <div class="w3-container w3-round w3-blue w3-center " style="height:20px;width:80%">80%</div>
+          </div>
+        </div>
+
+        <div class="container-theme row">
+          <div class="theme-color">
+            <h4>Nom de l'ennemi ici</h4>
+          </div>
+          <p>Rank de ennemi ici</p>
+          <div>Vaisseau de ennemi ici</div>
+          <div class="w3-light-grey">
+            <div class="w3-container w3-round w3-blue w3-center " style="height:20px;width:46%">46%</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 </template>

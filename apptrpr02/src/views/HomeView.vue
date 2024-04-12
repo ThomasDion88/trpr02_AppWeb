@@ -1,47 +1,47 @@
 <!-- Ce composant est associé à la route "/about" (voir fichier src/router/index.ts). -->
-<script setup lang="ts"> 
-  import { ref } from 'vue'
-  import { fetchAllShips } from '../scripts/services/gameService'
-  import { postsService } from '../scripts/services/postsService'
-  import { useRouter } from 'vue-router'
-  import type { Ship } from '../scripts/services/gameService'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { fetchAllShips } from '../scripts/services/gameService'
+import { postsService } from '../scripts/services/postsService'
+import { useRouter } from 'vue-router'
+import type { Ship } from '../scripts/services/gameService'
 
-  const playerName = ref('')
-  const selectedShipId = ref('')
-  const selectedShip = ref<Ship | null>(null)
-  const ships = ref<Ship[]>([])
+const playerName = ref('')
+const selectedShipId = ref('')
+const selectedShip = ref<Ship | null>(null)
+const ships = ref<Ship[]>([])
 
-  const router = useRouter()
+const router = useRouter()
 
-  const shipData = async () => {
-    const fetchedShips = await fetchAllShips()
-    ships.value = fetchedShips
-    selectedShip.value = fetchedShips[0]
-  }
-  shipData()
+const shipData = async () => {
+  const fetchedShips = await fetchAllShips()
+  ships.value = fetchedShips
+  selectedShip.value = fetchedShips[0]
+}
+shipData()
 
-  const startGame = async () => {
-    if (!playerName.value || !selectedShip.value) {
-      alert('Veuillez entrer votre nom et sélectionner un vaisseau.')
-      return
-    }
-
-    try {
-      const newPost = await postsService.postPlayerData({
-        playerName: playerName.value,
-        selectedShipId: selectedShipId.value
-      })
-      
-      await router.push({
-        name: 'Mission',
-        params: { postId: newPost.id }
-      })
-    } catch (error) {
-      alert('Une erreur est survenue lors du démarrage du jeu. Veuillez réessayer.')
-    }
+const startGame = async () => {
+  if (!playerName.value || !selectedShip.value) {
+    alert('Veuillez entrer votre nom et sélectionner un vaisseau.')
+    return
   }
 
-  
+  try {
+    const newPost = await postsService.postPlayerData({
+      playerName: playerName.value,
+      selectedShipId: selectedShipId.value
+    })
+
+    await router.push({
+      name: 'Mission',
+      params: { postId: newPost.id }
+    })
+  } catch (error) {
+    alert('Une erreur est survenue lors du démarrage du jeu. Veuillez réessayer.')
+  }
+}
+
+
 </script>
 
 <template>
@@ -50,7 +50,7 @@
       <h2>Votre Objectif : survivre à 5 missions en obtenant le plus de crédits galactiques</h2>
     </div>
 
-    <div id="container">
+    <div class="page-container">
       <div id="page">
         <form action="" method="POST" @submit.prevent="startGame">
 
