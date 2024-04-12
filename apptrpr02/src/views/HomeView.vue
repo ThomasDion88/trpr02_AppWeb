@@ -1,39 +1,39 @@
-<script setup lang="ts"> 
-  import { ref } from 'vue'
-  import { fetchAllShips } from '../scripts/services/gameService'
-  import { useRouter } from 'vue-router'
-  import type { Ship } from '../scripts/services/gameService'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { fetchAllShips } from '../scripts/services/gameService'
+import { useRouter } from 'vue-router'
+import type { Ship } from '../scripts/services/gameService'
 
-  const playerName = ref('')
-  const selectedShipId = ref<number | ''>('')
-  const selectedShip = ref<Ship | null>(null)
-  const ships = ref<Ship[]>([])
-  const router = useRouter()
+const playerName = ref('')
+const selectedShipId = ref<number | ''>('')
+const selectedShip = ref<Ship | null>(null)
+const ships = ref<Ship[]>([])
+const router = useRouter()
 
-  
 
-  const shipData = async () => {
-    const fetchedShips = await fetchAllShips()
-    ships.value = fetchedShips
-    selectedShip.value = fetchedShips[0]
-    selectedShipId.value = fetchedShips[0].id
-  }
-  shipData()
-  
-  const handleSubmit = async () => {
-    await router.push({
-      name: 'Mission',
-      params: {
-        playerName: playerName.value,
-        shipId: selectedShipId.value
-      }
-    })
-  }
+
+const shipData = async () => {
+  const fetchedShips = await fetchAllShips()
+  ships.value = fetchedShips
+  selectedShip.value = fetchedShips[0]
+  selectedShipId.value = fetchedShips[0].id
+}
+shipData()
+
+const handleSubmit = async () => {
+  await router.push({
+    name: 'Mission',
+    params: {
+      playerName: playerName.value,
+      shipId: selectedShipId.value
+    }
+  })
+}
 </script>
 
 <template>
   <div>
-    <div class="text-center" id="title">
+    <div class="text-center title">
       <h2>Votre Objectif : survivre à 5 missions en obtenant le plus de crédits galactiques</h2>
     </div>
 

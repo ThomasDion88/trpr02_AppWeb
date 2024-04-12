@@ -6,6 +6,12 @@
     width: auto;
 }
 
+#game-name {
+    color: blue;
+    font-size: large;
+    font-weight: 600;
+}
+
 #page {
     flex: 1;
     margin: 50px;
@@ -14,7 +20,7 @@
     border-radius: 30px;
 }
 
-#title {
+.title {
     background-color: lightskyblue;
     padding: 15px;
 }
@@ -50,4 +56,9 @@
     align-items: center;
     justify-content: space-evenly;
     width: auto;
+}
+
+#score-container {
+    margin-top: 20px;
+
 }

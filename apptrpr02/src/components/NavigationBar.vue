@@ -7,12 +7,9 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <!-- <li class="nav-item">
-          <RouterLink class="nav-link" id="publications" to="/">Mes publications</RouterLink>
-        </li>
         <li class="nav-item">
-          <RouterLink class="nav-link" id="apropos" :to="{ name: 'About' }">À propos</RouterLink>
-        </li> -->
+          <div class="nav-link" id="game-name">BattleOfShips.net</div>
+        </li>
 
         <li class="nav-item">
           <RouterLink class="nav-link" id="accueil" to="/">Accueil</RouterLink>
