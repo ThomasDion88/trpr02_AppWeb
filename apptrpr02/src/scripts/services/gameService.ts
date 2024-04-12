@@ -39,9 +39,9 @@ export async function fetchFiveRandomCharacters(): Promise<Character[]> {
     return characters.slice(0, 5);
 }
 
-export async function fetchShipById(id: number): Promise<Ship> {
-    let response = await fetch(`http://127.0.0.1:3000/ships/${id}`);
-    let ship = await response.json();
+export async function fetchShipById(id: number): Promise<Ship | undefined> {
+    const ships = await fetchAllShips();
+    const ship = ships.find(ship => ship.id === id);
     return ship;
 }
 
