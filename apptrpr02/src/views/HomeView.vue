@@ -37,7 +37,7 @@
       <h2>Votre Objectif : survivre à 5 missions en obtenant le plus de crédits galactiques</h2>
     </div>
 
-    <div id="container">
+    <div class="page-container">
       <div id="page">
         <form action="" method="POST" @submit.prevent="handleSubmit">
 
