@@ -1,47 +1,34 @@
-<!-- Ce composant est associé à la route "/about" (voir fichier src/router/index.ts). -->
 <script setup lang="ts"> 
   import { ref } from 'vue'
   import { fetchAllShips } from '../scripts/services/gameService'
-  import { postsService } from '../scripts/services/postsService'
   import { useRouter } from 'vue-router'
   import type { Ship } from '../scripts/services/gameService'
 
   const playerName = ref('')
-  const selectedShipId = ref('')
+  const selectedShipId = ref<number | ''>('')
   const selectedShip = ref<Ship | null>(null)
   const ships = ref<Ship[]>([])
-
   const router = useRouter()
+
+  
 
   const shipData = async () => {
     const fetchedShips = await fetchAllShips()
     ships.value = fetchedShips
     selectedShip.value = fetchedShips[0]
+    selectedShipId.value = fetchedShips[0].id
   }
   shipData()
-
-  const startGame = async () => {
-    if (!playerName.value || !selectedShip.value) {
-      alert('Veuillez entrer votre nom et sélectionner un vaisseau.')
-      return
-    }
-
-    try {
-      const newPost = await postsService.postPlayerData({
-        playerName: playerName.value,
-        selectedShipId: selectedShipId.value
-      })
-      
-      await router.push({
-        name: 'Mission',
-        params: { postId: newPost.id }
-      })
-    } catch (error) {
-      alert('Une erreur est survenue lors du démarrage du jeu. Veuillez réessayer.')
-    }
-  }
-
   
+  const handleSubmit = async () => {
+    await router.push({
+      name: 'Mission',
+      params: {
+        playerName: playerName.value,
+        shipId: selectedShipId.value
+      }
+    })
+  }
 </script>
 
 <template>
@@ -52,7 +39,7 @@
 
     <div id="container">
       <div id="page">
-        <form action="" method="POST" @submit.prevent="startGame">
+        <form action="" method="POST" @submit.prevent="handleSubmit">
 
           <div class="form-group">
             <label for="name">Votre nom:</label>
@@ -62,7 +49,7 @@
           <div class="form-group">
             <label for="ship">Votre vaisseau:</label>
             <select v-model="selectedShip" id="ship" class="form-control">
-              <option v-for="ship in ships" :value="ship">{{ ship.name }}</option>
+              <option v-for="ship in ships" :value="ship.id">{{ ship.name }}</option>
             </select>
           </div>
 
