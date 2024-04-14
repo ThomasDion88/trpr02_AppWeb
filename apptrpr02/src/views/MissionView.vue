@@ -157,7 +157,8 @@
       console.error('Failed to post data:', error);
     }
   }
-  
+
+  // Source : https://stackoverflow.com/questions/64117116/how-can-i-use-async-await-in-the-vue-3-0-setup-function-using-typescript
   onMounted(async () => {
     await gameData()
     updateEnemyData()
