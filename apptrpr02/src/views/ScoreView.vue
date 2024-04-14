@@ -5,10 +5,21 @@ import type { Score } from '../scripts/services/gameService'
 
 const scores = ref<Score[]>([])
 const scoreData = async () => {
-  const fetchedScores = await fetchAllScores()
-  scores.value = fetchedScores
+  try {
+    const fetchedScores = await fetchAllScores()
+    scores.value = fetchedScores
+  } catch (error) {
+    scores.value = null
+  }
 }
 scoreData()
+sortScores()
+
+function sortScores() {
+  scores.value = scores.value.sort((a, b) => {
+    return a.score - b.score
+  })
+}
 
 </script>
 
@@ -20,9 +31,9 @@ scoreData()
 
     <div id="score-container">
       <h4 class="text-center">Pointage</h4>
-      <div></div>
       <ul class="list-group">
-        <li v-for="score in scores" class="list-group-item">
+        <li v-if="scores === null" class="list-group-item">Impossible d'accéder aux scores.</li>
+        <li v-else v-for="score in scores" class="list-group-item">
           {{ score.id }} - {{ score.name }} - {{ score.score }}CG
         </li>
       </ul>
