@@ -48,7 +48,7 @@ const handleSubmit = async () => {
 
           <div class="form-group">
             <label for="ship">Votre vaisseau:</label>
-            <select v-model="selectedShip" id="ship" class="form-control">
+            <select v-model="selectedShipId" id="ship" class="form-control">
               <option v-for="ship in ships" :value="ship.id">{{ ship.name }}</option>
             </select>
           </div>

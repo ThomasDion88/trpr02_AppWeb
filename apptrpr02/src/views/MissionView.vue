@@ -1,21 +1,77 @@
-<script setup>
-  import { ref } from 'vue'
+<script setup lang='ts'>
+  import { ref, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
-  import { fetchShipById } from '../scripts/services/gameService'
+  import { fetchShipById, fetchFiveRandomCharacters, convertExperienceLevel, handleHealthPercentage } from '../scripts/services/gameService'
+  import type { Character } from '../scripts/services/gameService'
 
-  const selectedShip = ref<Ship | null>(null)
+  const selectedShip = ref(null)
   const route = useRoute()
 
   const playerName = route.params.playerName
   const selectedShipId = route.params.shipId
 
-  console.log(playerName)
-  console.log(selectedShipId)
+  const enemies = ref([]);
+  const currentEnemyIndex = ref(0)
+  const currentEnemy = ref(null)
+  const initialVitality = ref(100)
+
+  const player = ref<{ 
+    experience: string, 
+    health: number 
+  }>({ 
+    experience: '', 
+    health: 100 
+  });
+
+  const enemy = ref<{ 
+    experience: string, 
+    health: number 
+  }>({ 
+    experience: '', 
+    health: 0 
+  });
+
+  const playerData = async () => {
+    player.value.experience = await convertExperienceLevel(4)
+  }
 
   const shipData = async () => {
-    selectedShip = await fetchShipById(selectedShipId)
+    try {
+      selectedShip.value = await fetchShipById(selectedShipId)
+    } catch (error) {
+      console.error('Failed to fetch ship data:', error)
+      selectedShip.value = null
+    }
   }
-  shipData()
+
+  const enemiesData = async () => {
+    try {
+      const fetchedEnemies = await fetchFiveRandomCharacters();
+      enemies.value = fetchedEnemies;
+      currentEnemy.value = enemies.value[currentEnemyIndex.value]
+      initialVitality.value = currentEnemy.value.ship.vitality
+      
+      enemy.value.experience =  await convertExperienceLevel(currentEnemy.value.experience) 
+      enemy.value.health = await handleHealthPercentage(currentEnemy.value.ship.vitality, initialVitality.value)
+    } catch (error) {
+      console.error('Failed to load enemies:', error);
+      enemies.value = [];
+    }
+  }
+
+  const nextEnemy = async () => {
+    if (currentEnemyIndex.value < enemies.value.length - 1) {
+      currentEnemyIndex.value++;
+    } else {
+      console.log("No more enemies available.");
+    }
+  }
+ 
+  onMounted(() => {
+    shipData()
+    enemiesData()
+    playerData()
+  })
 
 </script>
 
@@ -46,29 +102,29 @@
 
       </div>
 
-
-
       <div class="mission-data">
 
         <div class="container-theme row">
           <div class="theme-color">
             <h4>{{ playerName }}</h4>
           </div>
-          <p>Rank joueur ici</p>
-          <div>{{ selectedShip.name }}</div>
+          <p>{{ player.experience ? player.experience : 'Chargement...' }}</p>
+          <div>{{ selectedShip ? selectedShip.name : 'Chargement...' }}</div>
           <div class="w3-light-grey">
-            <div class="w3-container w3-round w3-blue w3-center " style="height:20px;width:80%">80%</div>
+            <div class="w3-container w3-round w3-blue w3-center" :style="{ height: '20px', width: player.health ? player.health + '%' : '0%' }">{{ player.health + '%' }}</div>
           </div>
         </div>
 
         <div class="container-theme row">
           <div class="theme-color">
-            <h4>Nom de l'ennemi ici</h4>
+            <h4>{{ currentEnemy?.name || 'Chargement...' }}</h4>
           </div>
-          <p>Rank de ennemi ici</p>
-          <div>Vaisseau de ennemi ici</div>
+          <p>{{ currentEnemy ? enemy.experience : 'Chargement...' }}</p>
+          <div>{{ currentEnemy?.ship.name || 'Chargement...' }}</div>
           <div class="w3-light-grey">
-            <div class="w3-container w3-round w3-blue w3-center " style="height:20px;width:46%">46%</div>
+            <div class="w3-container w3-round w3-blue w3-center" :style="{ height: '20px', width: (currentEnemy?.ship ? enemy.health : 0) + '%' }">
+              {{ currentEnemy?.ship ? enemy.health + '%' : '0%' }}
+            </div>
           </div>
         </div>
 

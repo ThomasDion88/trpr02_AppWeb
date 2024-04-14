@@ -25,9 +25,10 @@ const routes: Array<RouteRecordRaw> = [
       component: HomeView
     },
     {
-      path: '/mission',
+      path: '/mission/:playerName/:shipId',
       name: 'Mission',
-      component: MissionView
+      component: MissionView,
+      props: true
     },
     {
       path: '/score',
