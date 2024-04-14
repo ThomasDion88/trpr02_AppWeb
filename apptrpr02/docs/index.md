@@ -5,14 +5,14 @@ layout: home
 hero:
   name: "trpr02"
   text: "Travail pratique 2"
-  tagline: Cours de développement d'applications web
+  tagline: Thomas Dion - Matis Bergeron
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
-    - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Matis Bergeron - Semaine 1
+      link: /matis-bergeron1
+    - theme: brand #alt
+      text: Thomas Dion - Semaine 1
+      link: /thomas-dion1
 
 features:
   - title: Feature A
