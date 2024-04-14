@@ -60,7 +60,8 @@
     }
   }
 
-  const combat = () => {
+  // Formule Math.floor trouvée sur : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor afin d'arrondir la valeur vers la plus petite unité exemple : (5.5 = 5)
+  const combat = async () => {
     if (!currentEnemy.value) {
       return
     }
@@ -146,7 +147,7 @@
   const postData = async () => {
     const postData = {
       name: playerName,
-      credit: player.value.credits
+      score: player.value.credits
     }
 
     try {
@@ -156,7 +157,7 @@
       console.error('Failed to post data:', error);
     }
   }
- 
+  
   onMounted(async () => {
     await gameData()
     updateEnemyData()
