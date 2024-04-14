@@ -14,6 +14,20 @@
       "id": 3,
       "name": "Kath'rine Tanoor",
       "score": 490
+    },
+    {
+      "credit": 0,
+      "id": 4
+    },
+    {
+      "name": "Matis",
+      "credit": 0,
+      "id": 5
+    },
+    {
+      "name": "Matis Bergeron",
+      "credit": 65,
+      "id": 6
     }
   ],
   "ships": [

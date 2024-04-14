@@ -22,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
     //},
     {
       path: '/',
-      name: 'accueil',
+      name: 'Accueil',
       component: HomeView
     },
     {

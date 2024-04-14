@@ -1,10 +1,12 @@
 <script setup lang='ts'>
   import { ref, onMounted } from 'vue'
-  import { useRoute } from 'vue-router'
+  import axios from 'axios';
+  import { useRoute, useRouter } from 'vue-router'
   import { fetchShipById, fetchFiveRandomCharacters, convertExperienceLevel, handleHealthPercentage, fetchShipVitality } from '../scripts/services/gameService'
   import type { Character } from '../scripts/services/gameService'
 
   const route = useRoute()
+  const router = useRouter()
   const playerName = route.params.playerName
   const selectedShipId = route.params.shipId
   const currentMission = ref(1)
@@ -38,12 +40,12 @@
       player.value.health = await handleHealthPercentage(initialPlayerVitality.value, initialPlayerVitality.value)
       player.value.credits = 0
 
-      enemies.value = await fetchFiveRandomCharacters();
+      enemies.value = await fetchFiveRandomCharacters()
 
-      totalMissions.value = enemies.value.length;
+      totalMissions.value = enemies.value.length
 
     } catch (error) {
-      console.error('Failed to fetch game data:', error)
+      console.error('Échec de la récupération des données du jeu :', error)
     }
   }
 
@@ -94,24 +96,28 @@
   const finishCombat = async () => {
     if (enemy.value.health <= 0) {
       player.value.credits += enemy.value.credits
-      alert(`Enemy defeated! You gained ${enemy.value.credits} credits.`)
+      alert(`Ennemi vaincu! Vous avez gagné ${enemy.value.credits} crédits.`)
       nextMission()
     } else if (player.value.health <= 0) {
-      alert("You have been defeated! Game over.")
+      alert("Vous avez été vaincu ! Partie terminé.")
+      router.push({
+        name: 'Accueil',
+      })
     }
   }
 
-  const nextMission = () => {
+  const nextMission = async () => {
     if (currentMission.value < totalMissions.value) {
       currentMission.value++
       currentEnemyIndex.value++
       updateEnemyData()
     } else {
-      alert("Congratulations! You have completed all missions!")
+      alert("Félicitations! Vous avez terminé toutes les missions !")
+      postData()
     }
-  };
+  }
 
-  const repairAndNext = () => {
+  const repairAndNext = async () => {
     const healthMissing = 100 - player.value.health
     const totalRepairCost = 5 * healthMissing
 
@@ -119,7 +125,7 @@
       if (player.value.credits >= totalRepairCost) {
         player.value.health = 100
         player.value.credits -= totalRepairCost
-        alert(`Ship fully repaired. ${totalRepairCost.toFixed(2)} credits were used.`)
+        alert(`Vaisseau entièrement réparé. ${totalRepairCost.toFixed(2)} crédits ont été utilisés.`)
       } else {
         const maxHealthPossible = Math.floor(player.value.credits / 5)
         const healthToRestore = Math.min(healthMissing, maxHealthPossible)
@@ -128,13 +134,27 @@
         player.value.health += healthToRestore
         player.value.credits -= repairCost
 
-        alert(`Ship partially repaired. ${repairCost.toFixed(2)} credits were used to restore ${healthToRestore}% health.`)
+        alert(`Vaisseau partiellement réparé. ${repairCost.toFixed(2)} crédits ont été utilisés pour restaurer ${healthToRestore} % de santé.`)
       }
     } else {
-      alert(`Not enough credits to repair the ship.`)
+      alert(`Pas assez de crédits pour réparer le Vaisseau.`)
     }
 
     nextMission()
+  }
+
+  const postData = async () => {
+    const postData = {
+      name: playerName,
+      credit: player.value.credits
+    }
+
+    try {
+      const response = await axios.post('http://127.0.0.1:3000/ranking', postData)
+      router.push({ name: 'Score' });
+    } catch (error) {
+      console.error('Failed to post data:', error);
+    }
   }
  
   onMounted(async () => {
@@ -180,7 +200,7 @@
           <p>{{ player ? player.credits : 0 }}</p>
           <div>{{ selectedShip ? selectedShip.name : 'Chargement...' }}</div>
           <div class="w3-light-grey">
-            <div class="w3-container w3-round w3-blue w3-center" :style="{ height: '20px', width: (currentEnemy?.ship ? enemy.health : 0) + '%' }">
+            <div class="w3-container w3-round w3-blue w3-center" :style="{ height: '20px', width: player.health + '%' }">
               {{ player.health.toFixed(2) + '%' }}
             </div>
           </div>
