@@ -66,3 +66,18 @@ export async function fetchAllScores(): Promise<Score[]> {
     let scores = await response.json();
     return scores;
 };
+
+export async function fetchShipVitality(shipId: number): Promise<number> {
+    let response = await fetch("http://127.0.0.1:3000/characters");
+    let characters = await response.json();
+
+    const id = Number(shipId);
+
+    for (const character of characters) {
+        if (character.ship.id === id) {
+            return character.ship.vitality;
+        }
+    }
+
+    return 0;
+};

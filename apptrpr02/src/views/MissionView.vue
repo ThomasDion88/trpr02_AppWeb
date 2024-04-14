@@ -1,76 +1,145 @@
 <script setup lang='ts'>
   import { ref, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
-  import { fetchShipById, fetchFiveRandomCharacters, convertExperienceLevel, handleHealthPercentage } from '../scripts/services/gameService'
+  import { fetchShipById, fetchFiveRandomCharacters, convertExperienceLevel, handleHealthPercentage, fetchShipVitality } from '../scripts/services/gameService'
   import type { Character } from '../scripts/services/gameService'
 
-  const selectedShip = ref(null)
   const route = useRoute()
-
   const playerName = route.params.playerName
   const selectedShipId = route.params.shipId
+  const currentMission = ref(1)
+  const totalMissions = ref(5)
 
-  const enemies = ref([]);
+  const selectedShip = ref<Ship | null>(null)
+  const enemies = ref<Character[]>([])
   const currentEnemyIndex = ref(0)
   const currentEnemy = ref(null)
-  const initialVitality = ref(100)
+  const initialEnemyVitality = ref(100)
+  const initialPlayerVitality = ref(100)
 
-  const player = ref<{ 
-    experience: string, 
-    health: number 
-  }>({ 
-    experience: '', 
-    health: 100 
-  });
+  const player = ref({
+    experience: '',
+    health: 100,
+    credits: 0
+  })
 
-  const enemy = ref<{ 
-    experience: string, 
-    health: number 
-  }>({ 
-    experience: '', 
-    health: 0 
-  });
+  const enemy = ref({
+    experience: '',
+    health: 100,
+    credits: 0
+  })
 
-  const playerData = async () => {
-    player.value.experience = await convertExperienceLevel(4)
-  }
-
-  const shipData = async () => {
+  const gameData = async () => {
     try {
       selectedShip.value = await fetchShipById(selectedShipId)
+
+      player.value.experience = await convertExperienceLevel(4)
+      initialPlayerVitality.value = await fetchShipVitality(selectedShipId)
+      player.value.health = await handleHealthPercentage(initialPlayerVitality.value, initialPlayerVitality.value)
+      player.value.credits = 0
+
+      enemies.value = await fetchFiveRandomCharacters();
+
+      totalMissions.value = enemies.value.length;
+
     } catch (error) {
-      console.error('Failed to fetch ship data:', error)
-      selectedShip.value = null
+      console.error('Failed to fetch game data:', error)
     }
   }
 
-  const enemiesData = async () => {
-    try {
-      const fetchedEnemies = await fetchFiveRandomCharacters();
-      enemies.value = fetchedEnemies;
+  const updateEnemyData = async () => {
+    if (currentEnemyIndex.value < enemies.value.length) {
       currentEnemy.value = enemies.value[currentEnemyIndex.value]
-      initialVitality.value = currentEnemy.value.ship.vitality
-      
+      initialEnemyVitality.value = currentEnemy.value.ship.vitality
+        
       enemy.value.experience =  await convertExperienceLevel(currentEnemy.value.experience) 
-      enemy.value.health = await handleHealthPercentage(currentEnemy.value.ship.vitality, initialVitality.value)
-    } catch (error) {
-      console.error('Failed to load enemies:', error);
-      enemies.value = [];
+      enemy.value.health = await handleHealthPercentage(currentEnemy.value.ship.vitality, initialEnemyVitality.value)
+      enemy.value.credits = currentEnemy.value.credit
     }
   }
 
-  const nextEnemy = async () => {
-    if (currentEnemyIndex.value < enemies.value.length - 1) {
-      currentEnemyIndex.value++;
-    } else {
-      console.log("No more enemies available.");
+  const combat = () => {
+    if (!currentEnemy.value) {
+      return
     }
+      
+    const experienceToHitChance = {
+      1: 20,
+      2: 35,
+      3: 50,
+      4: 70
+    }
+
+    const playerHitChance = experienceToHitChance[4]
+    const enemyHitChance = currentEnemy.value ? experienceToHitChance[currentEnemy.value.experience] : 0
+
+    const playerHits = Math.random() * 100 < playerHitChance
+    const enemyHits = Math.random() * 100 < enemyHitChance
+
+    if(playerHits) {
+      const damageToEnemy = 3 + Math.random() * 3
+      enemy.value.health = Math.max(enemy.value.health - damageToEnemy, 0)
+    }
+
+    if(enemyHits) {
+      const damageToPlayer = 3 + Math.random() * 3
+      player.value.health = Math.max(player.value.health - damageToPlayer, 0)
+    }
+
+    if (enemy.value.health <= 0 || player.value.health <= 0) {
+      finishCombat()
+    }
+  }
+
+  const finishCombat = async () => {
+    if (enemy.value.health <= 0) {
+      player.value.credits += enemy.value.credits
+      alert(`Enemy defeated! You gained ${enemy.value.credits} credits.`)
+      nextMission()
+    } else if (player.value.health <= 0) {
+      alert("You have been defeated! Game over.")
+    }
+  }
+
+  const nextMission = () => {
+    if (currentMission.value < totalMissions.value) {
+      currentMission.value++
+      currentEnemyIndex.value++
+      updateEnemyData()
+    } else {
+      alert("Congratulations! You have completed all missions!")
+    }
+  };
+
+  const repairAndNext = () => {
+    const healthMissing = 100 - player.value.health
+    const totalRepairCost = 5 * healthMissing
+
+    if(player.value.credits > 0) {
+      if (player.value.credits >= totalRepairCost) {
+        player.value.health = 100
+        player.value.credits -= totalRepairCost
+        alert(`Ship fully repaired. ${totalRepairCost.toFixed(2)} credits were used.`)
+      } else {
+        const maxHealthPossible = Math.floor(player.value.credits / 5)
+        const healthToRestore = Math.min(healthMissing, maxHealthPossible)
+        const repairCost = 5 * healthToRestore
+
+        player.value.health += healthToRestore
+        player.value.credits -= repairCost
+
+        alert(`Ship partially repaired. ${repairCost.toFixed(2)} credits were used to restore ${healthToRestore}% health.`)
+      }
+    } else {
+      alert(`Not enough credits to repair the ship.`)
+    }
+
+    nextMission()
   }
  
-  onMounted(() => {
-    shipData()
-    enemiesData()
-    playerData()
+  onMounted(async () => {
+    await gameData()
+    updateEnemyData()
   })
 
 </script>
@@ -87,16 +156,16 @@
             <h4>Actions</h4>
           </div>
           <div id="actions">
-            <button class="btn btn-primary ">Combattre</button>
-            <button class="btn btn-primary ">Terminer la mission</button>
-            <button class="btn btn-primary ">Terminer la mission et réparer le vaisseau</button>
+            <button class="btn btn-primary " @click="combat">Combattre</button>
+            <button class="btn btn-primary " @click="nextMission">Terminer la mission</button>
+            <button class="btn btn-primary " @click="repairAndNext">Terminer la mission et réparer le vaisseau</button>
           </div>
 
         </div>
 
         <div class="container-theme">
           <div class="theme-color">
-            <h4>Mission en cours</h4>
+            <h4>Mission en cours {{ currentMission }} / {{ totalMissions }}</h4>
           </div>
         </div>
 
@@ -109,9 +178,12 @@
             <h4>{{ playerName }}</h4>
           </div>
           <p>{{ player.experience ? player.experience : 'Chargement...' }}</p>
+          <p>{{ player ? player.credits : 0 }}</p>
           <div>{{ selectedShip ? selectedShip.name : 'Chargement...' }}</div>
           <div class="w3-light-grey">
-            <div class="w3-container w3-round w3-blue w3-center" :style="{ height: '20px', width: player.health ? player.health + '%' : '0%' }">{{ player.health + '%' }}</div>
+            <div class="w3-container w3-round w3-blue w3-center" :style="{ height: '20px', width: (currentEnemy?.ship ? enemy.health : 0) + '%' }">
+              {{ player.health.toFixed(2) + '%' }}
+            </div>
           </div>
         </div>
 
@@ -120,10 +192,11 @@
             <h4>{{ currentEnemy?.name || 'Chargement...' }}</h4>
           </div>
           <p>{{ currentEnemy ? enemy.experience : 'Chargement...' }}</p>
+          <p>{{ enemy.credits ? enemy.credits : 'Chargement...' }}</p>
           <div>{{ currentEnemy?.ship.name || 'Chargement...' }}</div>
           <div class="w3-light-grey">
             <div class="w3-container w3-round w3-blue w3-center" :style="{ height: '20px', width: (currentEnemy?.ship ? enemy.health : 0) + '%' }">
-              {{ currentEnemy?.ship ? enemy.health + '%' : '0%' }}
+              {{ enemy.health.toFixed(2) + '%' }}
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import MissionView from '../views/MissionView.vue'
 import ScoreView from '../views/ScoreView.vue'
+import AboutView from '../views/AboutView.vue'
 
 const routes: Array<RouteRecordRaw> = [
     //{
@@ -34,6 +35,11 @@ const routes: Array<RouteRecordRaw> = [
       path: '/score',
       name: 'Score',
       component: ScoreView
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: AboutView
     },
     {
       // Route qui affiche le détail d'un post identifié par son id.
