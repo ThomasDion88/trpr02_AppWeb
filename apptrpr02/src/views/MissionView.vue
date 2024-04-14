@@ -151,19 +151,18 @@
 
       <div class="mission-data">
 
-        <div class="container-theme row">
+        <div class="mission-container">
           <div class="theme-color">
             <h4>Actions</h4>
           </div>
           <div id="actions">
-            <button class="btn btn-primary " @click="combat">Combattre</button>
-            <button class="btn btn-primary " @click="nextMission">Terminer la mission</button>
-            <button class="btn btn-primary " @click="repairAndNext">Terminer la mission et réparer le vaisseau</button>
+            <button class="btn btn-primary action" @click="combat">Combattre</button>
+            <button class="btn btn-primary action" @click="nextMission">Terminer la mission</button>
+            <button class="btn btn-primary action" @click="repairAndNext">Terminer la mission et réparer le vaisseau</button>
           </div>
-
         </div>
 
-        <div class="container-theme">
+        <div class="mission-container">
           <div class="theme-color">
             <h4>Mission en cours {{ currentMission }} / {{ totalMissions }}</h4>
           </div>
@@ -173,7 +172,7 @@
 
       <div class="mission-data">
 
-        <div class="container-theme row">
+        <div class="mission-container ">
           <div class="theme-color">
             <h4>{{ playerName }}</h4>
           </div>
@@ -187,7 +186,7 @@
           </div>
         </div>
 
-        <div class="container-theme row">
+        <div class="mission-container ">
           <div class="theme-color">
             <h4>{{ currentEnemy?.name || 'Chargement...' }}</h4>
           </div>
@@ -195,7 +194,8 @@
           <p>{{ enemy.credits ? enemy.credits : 'Chargement...' }}</p>
           <div>{{ currentEnemy?.ship.name || 'Chargement...' }}</div>
           <div class="w3-light-grey">
-            <div class="w3-container w3-round w3-blue w3-center" :style="{ height: '20px', width: (currentEnemy?.ship ? enemy.health : 0) + '%' }">
+            <div class="w3-container w3-round w3-blue w3-center"
+              :style="{ height: '20px', width: (currentEnemy?.ship ? enemy.health : 0) + '%' }">
               {{ enemy.health.toFixed(2) + '%' }}
             </div>
           </div>
