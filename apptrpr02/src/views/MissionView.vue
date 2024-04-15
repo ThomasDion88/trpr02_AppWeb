@@ -1,9 +1,11 @@
 <script setup lang='ts'>
   import { ref, onMounted } from 'vue'
   import axios from 'axios';
-  import { useRoute, useRouter } from 'vue-router'
+  import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
   import { fetchShipById, fetchFiveRandomCharacters, convertExperienceLevel, handleHealthPercentage, fetchShipVitality } from '../scripts/services/gameService'
+  import ConfirmModal from '../components/ConfirmModal.vue'
   import type { Character } from '../scripts/services/gameService'
+  import { useToast } from 'vue-toast-notification'
 
   const route = useRoute()
   const router = useRouter()
@@ -19,6 +21,10 @@
   const initialEnemyVitality = ref(100)
   const initialPlayerVitality = ref(100)
 
+  const triggerModal = ref(0)
+  const isGameActive = ref(false)
+  const nextView = ref()
+
   const player = ref({
     experience: '',
     health: 100,
@@ -33,6 +39,7 @@
 
   const gameData = async () => {
     try {
+      console.log(isGameActive.value)
       selectedShip.value = await fetchShipById(selectedShipId)
 
       player.value.experience = await convertExperienceLevel(4)
@@ -45,7 +52,10 @@
       totalMissions.value = enemies.value.length
 
     } catch (error) {
-      console.error('Échec de la récupération des données du jeu :', error)
+      useToast().error(
+        `Échec de la récupération des données du jeu : ${(error as Error).message}.`,
+        { duration: 6000 }
+      )
     }
   }
 
@@ -62,10 +72,9 @@
 
   // Formule Math.floor trouvée sur : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor afin d'arrondir la valeur vers la plus petite unité exemple : (5.5 = 5)
   const combat = async () => {
-    if (!currentEnemy.value) {
-      return
-    }
-      
+
+    isGameActive.value = true
+
     const experienceToHitChance = {
       1: 20,
       2: 35,
@@ -89,6 +98,8 @@
       player.value.health = Math.max(player.value.health - damageToPlayer, 0)
     }
 
+    console.log(isGameActive.value)
+
     if (enemy.value.health <= 0 || player.value.health <= 0) {
       finishCombat()
     }
@@ -97,10 +108,14 @@
   const finishCombat = async () => {
     if (enemy.value.health <= 0) {
       player.value.credits += enemy.value.credits
-      alert(`Ennemi vaincu! Vous avez gagné ${enemy.value.credits} crédits.`)
+      useToast().success(
+        `Ennemi vaincu! Vous avez gagné ${enemy.value.credits} crédits.`,
+        { duration: 6000 },
+      )
       nextMission()
     } else if (player.value.health <= 0) {
       alert("Vous avez été vaincu ! Partie terminé.")
+      isGameActive.value = false
       router.push({
         name: 'Accueil',
       })
@@ -114,6 +129,7 @@
       updateEnemyData()
     } else {
       alert("Félicitations! Vous avez terminé toutes les missions !")
+      isGameActive.value = false
       postData()
     }
   }
@@ -126,7 +142,10 @@
       if (player.value.credits >= totalRepairCost) {
         player.value.health = 100
         player.value.credits -= totalRepairCost
-        alert(`Vaisseau entièrement réparé. ${totalRepairCost.toFixed(2)} crédits ont été utilisés.`)
+        useToast().info(
+          `Vaisseau entièrement réparé. ${totalRepairCost.toFixed(2)} crédits ont été utilisés.`,
+          { duration: 6000 }
+        )
       } else {
         const maxHealthPossible = Math.floor(player.value.credits / 5)
         const healthToRestore = Math.min(healthMissing, maxHealthPossible)
@@ -135,10 +154,16 @@
         player.value.health += healthToRestore
         player.value.credits -= repairCost
 
-        alert(`Vaisseau partiellement réparé. ${repairCost.toFixed(2)} crédits ont été utilisés pour restaurer ${healthToRestore} % de santé.`)
+        useToast().info(
+          `Vaisseau partiellement réparé. ${repairCost.toFixed(2)} crédits ont été utilisés pour restaurer ${healthToRestore} % de santé.`,
+          { duration: 6000 }
+        )
       }
     } else {
-      alert(`Pas assez de crédits pour réparer le Vaisseau.`)
+      useToast().info(
+        `Pas assez de crédits pour réparer le Vaisseau.`,
+        { duration: 6000 }
+      )
     }
 
     nextMission()
@@ -154,10 +179,28 @@
       const response = await axios.post('http://127.0.0.1:3000/ranking', postData)
       router.push({ name: 'Score' });
     } catch (error) {
-      console.error('Failed to post data:', error);
+      useToast().error(
+        `Échec de l'envoi des données du jeu : ${(error as Error).message}.`,
+        { duration: 6000 }
+      )
     }
   }
 
+  function cancelConfirmed() {
+      isGameActive.value = false
+      router.push({ name: nextView.value })
+  }
+
+  onBeforeRouteLeave((to, from, next) => {
+    if (isGameActive.value) {
+      nextView.value = to.name
+      triggerModal.value++
+      next(false)
+    } else {
+      next()
+    }
+  })
+  
   // Source : https://stackoverflow.com/questions/64117116/how-can-i-use-async-await-in-the-vue-3-0-setup-function-using-typescript
   onMounted(async () => {
     await gameData()
@@ -188,6 +231,7 @@
           <div class="theme-color">
             <h4>Mission en cours {{ currentMission }} / {{ totalMissions }}</h4>
           </div>
+          <p>Votre Objectif : survivre à 5 missions en obtenant le plus de crédits galactiques</p>
         </div>
 
       </div>
@@ -199,7 +243,7 @@
             <h4>{{ playerName }}</h4>
           </div>
           <p>{{ player.experience ? player.experience : 'Chargement...' }}</p>
-          <p>{{ player ? player.credits : 0 }}</p>
+          <p>{{ player ? player.credits : 0 }} GC</p>
           <div>{{ selectedShip ? selectedShip.name : 'Chargement...' }}</div>
           <div class="w3-light-grey">
             <div class="w3-container w3-round w3-blue w3-center" :style="{ height: '20px', width: player.health + '%' }">
@@ -213,7 +257,7 @@
             <h4>{{ currentEnemy?.name || 'Chargement...' }}</h4>
           </div>
           <p>{{ currentEnemy ? enemy.experience : 'Chargement...' }}</p>
-          <p>{{ enemy.credits ? enemy.credits : 'Chargement...' }}</p>
+          <p>{{ enemy.credits ? enemy.credits : 'Chargement...' }} GC</p>
           <div>{{ currentEnemy?.ship.name || 'Chargement...' }}</div>
           <div class="w3-light-grey">
             <div class="w3-container w3-round w3-blue w3-center"
@@ -227,5 +271,10 @@
 
     </div>
 
+  </div>
+  <div>
+    <ConfirmModal @onModalConfirmed="cancelConfirmed" :trigger="triggerModal" title="Attention"
+      body="Vos changements seront perdus. Voulez-vous vraiment quitter cette page ? " cancelButton="Non"
+      confirmButton="Oui, quitter sans sauvergarder" />
   </div>
 </template>

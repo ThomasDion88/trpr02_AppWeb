@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { fetchAllScores } from '../scripts/services/gameService'
 import type { Score } from '../scripts/services/gameService'
+import { useToast } from 'vue-toast-notification'
 
 const scores = ref<Score[]>([])
 const scoreData = async () => {
@@ -9,6 +10,10 @@ const scoreData = async () => {
     const fetchedScores = await fetchAllScores()
     scores.value = fetchedScores
   } catch (error) {
+    useToast().error(
+      `Erreur avec le service: ${(error as Error).message}. Est-ce que vous avez démarré le backend localement ?`,
+      { duration: 6000 }
+    )
     scores.value = null
   }
 }
