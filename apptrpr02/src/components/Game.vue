@@ -11,7 +11,7 @@
 
   const props = defineProps<{
     playerName: string,
-    selectedShipId: string,
+    selectedShipId: number,
   }>()
   
   const emit = defineEmits<{

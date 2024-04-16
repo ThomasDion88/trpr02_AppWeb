@@ -23,7 +23,7 @@ const scoreData = async () => {
       `Erreur avec le service: ${(error as Error).message}. Est-ce que vous avez démarré le backend localement ?`,
       { duration: 6000 }
     )
-    scores.value = null
+    scores.value = []
   }
 }
 
