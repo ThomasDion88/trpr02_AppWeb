@@ -71,7 +71,7 @@ export async function fetchFiveRandomCharacters(): Promise<Character[]> {
     return characters.slice(0, 5);
 };
 ```
-::: Warning
+::: warning
 Les test n'ont pas encore été complétés.
 :::
 
