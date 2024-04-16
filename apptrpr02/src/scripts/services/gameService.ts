@@ -21,6 +21,10 @@ export type Character = {
       },
 };
 
+export type DisplayedData = {
+    [key: number]: Score;
+};
+
 const experienceLevels: { [key: number]: string } = {
     1: 'Débutant',
     2: 'Confirmé',

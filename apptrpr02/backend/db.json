@@ -3,27 +3,17 @@
     {
       "id": 1,
       "name": "Yan Maz Solo",
-      "score": 500
+      "score": 100
     },
     {
       "id": 2,
       "name": "Jym'Gil the Hutt",
-      "score": 495
+      "score": 295
     },
     {
       "id": 3,
       "name": "Kath'rine Tanoor",
       "score": 490
-    },
-    {
-      "name": "dd",
-      "score": 0,
-      "id": 4
-    },
-    {
-      "name": "dd",
-      "score": 110,
-      "id": 5
     }
   ],
   "ships": [
