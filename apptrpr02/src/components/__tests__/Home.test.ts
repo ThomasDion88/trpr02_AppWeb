@@ -10,10 +10,10 @@ const router = createRouter({
     routes: routes
 })
 
-describe('Home', () => {
+describe('Home.vue', () => {
     it('Sur envoi du formulaire, doit pouvoir naviguer sur la page de mission.', async () => {
-        router.push('/') // S'assurer de commencer avec une route connue
-        await router.isReady() // Attendre que le routeur soit prêt
+        router.push('/')
+        await router.isReady()
 
         const wrapper = mount(Home, {
             global: {
@@ -23,8 +23,7 @@ describe('Home', () => {
 
         const routerSpy = vi.spyOn(router, 'push')
 
-        // Trouver le lien par son texte et simuler un clic
-        const sendButton = wrapper.find('#sendButton') // Adapter le sélecteur selon ton besoin
+        const sendButton = wrapper.find('#sendButton')
         await sendButton.trigger('click')
 
         expect(routerSpy).toHaveBeenCalledWith('/')
@@ -40,10 +39,9 @@ describe('Home', () => {
         const form = wrapper.find('form');
         await form.trigger('submit.prevent');
 
-        const toast = wrapper.findComponent({ name: 'VueToastification' }); // Assuming toast is a Vue component
+        const toast = wrapper.findComponent({ name: 'VueToastification' }); 
         expect(toast.exists()).to.be.true;
 
-        // Assert the toast message content
         expect(toast.text()).to.equal('Veuillez entrer un nom de joueur');
     });
 })
