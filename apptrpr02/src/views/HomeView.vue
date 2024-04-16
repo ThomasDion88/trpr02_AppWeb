@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted} from 'vue'
 import { fetchAllShips } from '../scripts/services/gameService'
 import { useRouter } from 'vue-router'
 import type { Ship } from '../scripts/services/gameService'
+import { useToast } from 'vue-toast-notification'
 
 const playerName = ref('')
 const selectedShipId = ref<number | ''>('')
@@ -11,23 +12,42 @@ const ships = ref<Ship[]>([])
 const router = useRouter()
 
 
+onMounted( () => {
+  shipData()
+})
 
 const shipData = async () => {
-  const fetchedShips = await fetchAllShips()
-  ships.value = fetchedShips
-  selectedShip.value = fetchedShips[0]
-  selectedShipId.value = fetchedShips[0].id
+  try {
+    const fetchedShips = await fetchAllShips()
+    ships.value = fetchedShips
+    selectedShip.value = fetchedShips[0]
+    selectedShipId.value = fetchedShips[0].id
+  } catch(error) {
+    useToast().error(
+      `Erreur avec le service: ${(error as Error).message}. Est-ce que vous avez démarré le backend localement ?`,
+      { duration: 6000 }
+    )
+  }
 }
-shipData()
+
 
 const handleSubmit = async () => {
-  await router.push({
-    name: 'Mission',
-    params: {
-      playerName: playerName.value,
-      shipId: selectedShipId.value
-    }
-  })
+  try {
+    await router.push({
+      name: 'Mission',
+      params: {
+        playerName: playerName.value,
+        shipId: selectedShipId.value
+      }
+    })
+  }
+  catch (error) {
+    useToast().error(
+      `Veuillez entrer un nom de joueur`,
+      { duration: 6000 }
+    )
+  }
+
 }
 </script>
 
