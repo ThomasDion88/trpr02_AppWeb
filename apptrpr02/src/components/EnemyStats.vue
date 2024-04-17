@@ -13,14 +13,14 @@ const props = defineProps<{
 <template>
 <div class="mission-container ">
     <div class="theme-color">
-        <h4>{{ currentEnemy?.name || 'Chargement...' }}</h4>
+        <h4>{{ props.currentEnemy?.name || 'Chargement...' }}</h4>
     </div>
-    <p>{{ currentEnemy ? enemy.experience : 'Chargement...' }}</p>
-    <p>{{ enemy.credits ? enemy.credits : 'Chargement...' }} GC</p>
-    <div>{{ currentEnemy?.ship.name || 'Chargement...' }}</div>
+    <p>{{ props.currentEnemy ? props.enemy.experience : 'Chargement...' }}</p>
+    <p>{{ props.enemy.credits ? props.enemy.credits : 'Chargement...' }} GC</p>
+    <div>{{ props.currentEnemy?.ship.name || 'Chargement...' }}</div>
         <div class="w3-light-grey">
-            <div class="w3-container w3-round w3-blue w3-center" :style="{ height: '20px', width: (currentEnemy?.ship ? enemy.health : 0) + '%' }">
-                {{ enemy.health.toFixed(2) + '%' }}
+            <div class="w3-container w3-round w3-blue w3-center" :style="{ height: '20px', width: (props.currentEnemy?.ship ? props.enemy.health : 0) + '%' }">
+                {{ props.enemy.health.toFixed(2) + '%' }}
             </div>
         </div>
 </div>
