@@ -3,12 +3,11 @@ import { onMounted, ref } from 'vue'
 import type { Score as ScoreType } from '../scripts/services/gameService'
 import { useToast } from 'vue-toast-notification'
 import { fetchAllScores } from '../scripts/services/gameService'
-import Score from '../components/Score.vue'
 
 const scores = ref<ScoreType[]>([])
 
 // Source : https://howtodoinjava.com/typescript/maps/
-let scoreMap = new Map<number, Score>([])
+let scoreMap = new Map<number, ScoreType>([])
 
 onMounted(() => {
   scoreData()
