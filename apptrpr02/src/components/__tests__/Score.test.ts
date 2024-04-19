@@ -3,15 +3,15 @@ import { mount } from '@vue/test-utils';
 import ScoreView from '../Score.vue';
 
 describe('ScoreView Component', () => {
-    let wrapper: any
+  let wrapper: any
 
-    beforeEach(() => {
-        wrapper = mount(ScoreView)
-    })
+  beforeEach(() => {
+      wrapper = mount(ScoreView)
+  })
 
-    afterEach(() => {
-        wrapper.unmount()
-    })
+  afterEach(() => {
+      wrapper.unmount()
+  })
 
   it('affiche les scores correctement', async () => {
     // Sources : https://vuejs.org/api/general.html + ChatGPT. Pour s'assurer que les tests sont synchronisés avec le cycle de mise à jour de Vue

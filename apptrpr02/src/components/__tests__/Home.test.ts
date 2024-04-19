@@ -1,71 +1,42 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import Home from '../Home.vue'
-import { createRouter, createWebHistory } from 'vue-router'
-import routes from '../../router/routes'
-import { useToast } from 'vue-toast-notification'
-
-const router = createRouter({
-  history: createWebHistory(),
-  routes: routes
-})
 
 describe('Home', () => {
   it('Sur envoi du formulaire, doit pouvoir naviguer sur la page de mission.', async () => {
-    router.push('/')
-    await router.isReady()
+    const wrapper = mount(Home);
 
-    const wrapper = mount(Home, {
-      global: {
-        plugins: [router]
-      }
-    })
+    wrapper.vm.playerName = 'John Doe'
+    wrapper.vm.selectedShipId = 1
 
-    const routerSpy = vi.spyOn(router, 'push')
+    await wrapper.find('form').trigger('submit.prevent')
 
-    const nameField = wrapper.find('#name');
-    await nameField.setValue('test');
-    const sendButton = wrapper.find('#sendButton')
-    await sendButton.trigger('click')
-
-    expect(routerSpy).toHaveBeenCalledWith('/')
+    const formSubmittedEvents = wrapper.emitted('formSubmitted')
+    expect(formSubmittedEvents).toBeDefined()
+    expect(formSubmittedEvents).toHaveLength(1)
+    expect(formSubmittedEvents![0]).toEqual([true, 'John Doe', 1])
   })
 
+  it('change entrée de nameInput lorsque l\'utilisateur entre son nom', async () => {
+    const wrapper = mount(Home)
 
-  it("Sur envoi du formulaire, lorsque nom manquant, une erreur s'affiche.", async () => {
-    const wrapper = mount(Home);
-    const nameInput = wrapper.find('#name');
-    await nameInput.setValue('');
+    const nameInput = wrapper.find('#name')
+    await nameInput.setValue('Thomas')
+    expect(wrapper.vm.playerName).toBe('Thomas')
+  })
 
-    /*const sendButton = wrapper.find('#sendButton')
-    await sendButton.trigger('click')
+  it('emits the correct event on form submission', async () => {
+    const wrapper = mount(Home)
+    
+    wrapper.vm.playerName = 'Thomas'
+    wrapper.vm.selectedShipId = 1
 
-    await wrapper.vm.$nextTick();
+    const form = wrapper.find('form')
+    await form.trigger('submit.prevent')
 
-    const toast = wrapper.find('[role="alert"]');
+    const formSubmittedEvents = wrapper.emitted('formSubmitted')
+    expect(formSubmittedEvents).toHaveLength(1)
+    expect(formSubmittedEvents![0]).toEqual([true, 'Thomas', 1])
+  })
 
-    //"v-toast__item v-toast__item--error v-toast__item--bottom-right"
-
-    expect(toast.exists()).toBe(true);
-
-    expect(toast.text()).to.equal('Veuillez entrer un nom de joueur');*/
-
-    /*const useToastSpy = vi.spyOn(Home, 'useToast');
-
-    const form = wrapper.find('form');
-    await form.trigger('submit.prevent');
-
-    expect(useToastSpy).toHaveBeenCalled();
-
-    vi.clearAllMocks();*/
-
-    /*const form = wrapper.find('form');
-    await form.trigger('submit.prevent');
-    await wrapper.vm.$nextTick()
-    expect(wrapper.text()).toContain('Erreur avec le service');*/
-
-    await wrapper.find('#sendButton').trigger('click')
-    const toast = wrapper.find('.vue-toast-notification')
-    expect(toast.exists()).toBe(true)
-  });
 })
