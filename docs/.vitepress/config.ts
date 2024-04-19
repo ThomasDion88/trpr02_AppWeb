@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: '/trpr02_AppWeb/',
   title: "trpr02",
   description: "Travail pratique 2",
   themeConfig: {
