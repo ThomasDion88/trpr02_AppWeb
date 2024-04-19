@@ -48,7 +48,7 @@
 </script>
 
 <template>
-  <div class="page-container">
+  <div class="page-container" id="game">
     <Game :playerName="route.params.playerName" :selectedShipId="route.params.shipId" @gameOver="handleGameOver" @gameActive="handleGameState" @scorePosted="handleScorePost"/>
   </div>
   <div>

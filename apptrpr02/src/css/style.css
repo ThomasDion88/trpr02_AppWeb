@@ -78,3 +78,7 @@
 #action {
     padding: 10px;
 }
+
+#game {
+    background-image: url(../assets/background.png);
+}
