@@ -19,12 +19,6 @@ hero:
     - theme: alt 
       text: Thomas Dion - Semaine 2
       link: /thomas-dion2
-    - theme: brand 
-      text: Matis Bergeron - Semaine 3
-      link: /matis-bergeron3
-    - theme: alt 
-      text: Thomas Dion - Semaine 3
-      link: /thomas-dion3
 
 features:
   - title: Des combats difficiles
