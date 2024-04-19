@@ -4,28 +4,6 @@ import Home from '../Home.vue'
 
 describe('Home', () => {
   it('Sur envoi du formulaire, les informations du formulaire sont correctement emit', async () => {
-    const wrapper = mount(Home);
-
-    wrapper.vm.playerName = 'Thomas'
-    wrapper.vm.selectedShipId = 1
-
-    await wrapper.find('form').trigger('submit.prevent')
-
-    const formSubmittedEvents = wrapper.emitted('formSubmitted')
-    expect(formSubmittedEvents).toBeDefined()
-    expect(formSubmittedEvents).toHaveLength(1)
-    expect(formSubmittedEvents![0]).toEqual([true, 'Thomas', 1])
-  })
-
-  it('change entrée de nameInput lorsque l\'utilisateur entre son nom', async () => {
-    const wrapper = mount(Home)
-
-    const nameInput = wrapper.find('#name')
-    await nameInput.setValue('Thomas')
-    expect(wrapper.vm.playerName).toBe('Thomas')
-  })
-
-  it('emits the correct event on form submission', async () => {
     const wrapper = mount(Home)
     
     wrapper.vm.playerName = 'Thomas'
@@ -39,4 +17,11 @@ describe('Home', () => {
     expect(formSubmittedEvents![0]).toEqual([true, 'Thomas', 1])
   })
 
+  it('change entrée de nameInput lorsque l\'utilisateur entre son nom', async () => {
+    const wrapper = mount(Home)
+
+    const nameInput = wrapper.find('#name')
+    await nameInput.setValue('Thomas')
+    expect(wrapper.vm.playerName).toBe('Thomas')
+  })
 })
