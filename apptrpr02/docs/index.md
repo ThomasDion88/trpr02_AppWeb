@@ -10,15 +10,27 @@ hero:
     - theme: brand
       text: Matis Bergeron - Semaine 1
       link: /matis-bergeron1
-    - theme: brand #alt
+    - theme: alt 
       text: Thomas Dion - Semaine 1
       link: /thomas-dion1
+    - theme: brand 
+      text: Matis Bergeron - Semaine 2
+      link: /matis-bergeron2
+    - theme: alt 
+      text: Thomas Dion - Semaine 2
+      link: /thomas-dion2
+    - theme: brand 
+      text: Matis Bergeron - Semaine 3
+      link: /matis-bergeron3
+    - theme: alt 
+      text: Thomas Dion - Semaine 3
+      link: /thomas-dion3
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Des combats difficiles
+    details: BattleOfShips.net vous introduit dans un monde de combats spaciaux intenses et rudes
+  - title: Un objectif ardu
+    details: Votre objectif? Récolter le maximum de crédits galactiques en détruisant les vaisseaux des adversaires.
+  - title: Une interface conviviale
+    details: Le jeu a été conçu pour être simple, efficace et être apaisant pour les yeux du joueur. Un mode sombre est en construction.
 ---

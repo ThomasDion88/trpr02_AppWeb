@@ -3,10 +3,10 @@ import { mount } from '@vue/test-utils'
 import Home from '../Home.vue'
 
 describe('Home', () => {
-  it('Sur envoi du formulaire, doit pouvoir naviguer sur la page de mission.', async () => {
+  it('Sur envoi du formulaire, les informations du formulaire sont correctement emit', async () => {
     const wrapper = mount(Home);
 
-    wrapper.vm.playerName = 'John Doe'
+    wrapper.vm.playerName = 'Thomas'
     wrapper.vm.selectedShipId = 1
 
     await wrapper.find('form').trigger('submit.prevent')
@@ -14,7 +14,7 @@ describe('Home', () => {
     const formSubmittedEvents = wrapper.emitted('formSubmitted')
     expect(formSubmittedEvents).toBeDefined()
     expect(formSubmittedEvents).toHaveLength(1)
-    expect(formSubmittedEvents![0]).toEqual([true, 'John Doe', 1])
+    expect(formSubmittedEvents![0]).toEqual([true, 'Thomas', 1])
   })
 
   it('change entrée de nameInput lorsque l\'utilisateur entre son nom', async () => {
