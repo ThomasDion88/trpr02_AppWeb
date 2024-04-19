@@ -21,11 +21,11 @@ describe('ScoreView Component', () => {
 
     expect(wrapper.find('#score-container').exists()).toBe(true)
 
-    const scoreItems = wrapper.findAll('#ranking')
-    expect(scoreItems.length).toBeGreaterThan(0)
+    const scoreList = wrapper.findAll('#ranking')
+    expect(scoreList.length).toBeGreaterThan(0)
 
-    expect(scoreItems[0].text()).toContain('1 -')
-    expect(scoreItems[0].text()).toContain('CG')
+    expect(scoreList[0].text()).toContain('1 -')
+    expect(scoreList[0].text()).toContain('CG')
   })
 })
 
