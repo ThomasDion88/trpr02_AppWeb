@@ -7,8 +7,8 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: 'Accueil', link: '/' },
+      { text: 'Revues', link: '/matis-bergeron1' }
     ],
 
     sidebar: [
@@ -20,9 +20,7 @@ export default defineConfig({
           { text: 'Thomas Dion - Semaine 2', link: '/thomas-dion2' },
           { text: 'Matis Bergeron - Semaine 2', link: '/matis-bergeron2' },
           { text: 'Thomas Dion - Semaine 3', link: '/thomas-dion3' },
-          { text: 'Matis Bergeron - Semaine 3', link: '/matis-bergeron3' },
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: 'Matis Bergeron - Semaine 3', link: '/matis-bergeron3' }
         ]
       }
     ],

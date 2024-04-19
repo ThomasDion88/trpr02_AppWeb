@@ -1,4 +1,4 @@
-# Revu de code - Semaine 1
+# Revue de code - Semaine 1
 
 ## Le GameService:
 
